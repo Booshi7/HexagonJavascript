@@ -13,6 +13,12 @@ let arrow = {
     height: arrowh,
 }
 
+let formehexagonale = {
+    width: 150,
+    height: 150,
+    img: null,
+}
+
 let center = {
     x: boardw / 2,
     y: boardh / 2,
@@ -20,6 +26,8 @@ let center = {
 
 let gameover = false;
 let score = 0;
+let rotationspeed = 0.1;
+let globalrotation = 0;
 let keys = {};
 
 // FPS
@@ -46,8 +54,15 @@ window.onload = function() {
         requestAnimationFrame(update);
     }
 
+    formehexagonale.img = document.getElementById("hexagonal")
+    formehexagonale.onload = function() {
+        requestAnimationFrame(update)
+    }
+
+
     fpsCounter = document.getElementById("fpsCounter");
 
+    drawhexagonal();
     drawArrow();
     requestAnimationFrame(update);
 }
@@ -63,20 +78,32 @@ function update(timestamp) {
     context.clearRect(0, 0, board.width, board.height);
 
     if (keys['q']) {
-        arrowrot -= 0.1;
+        arrowrot -= rotationspeed;
     } else if (keys['d']) {
-        arrowrot += 0.1;
+        arrowrot += rotationspeed;
     }
-
+    globalrotation += 0.05;
+    context.save()
+    context.translate(center.x, center.y)
+    context.rotate(globalrotation)
     drawArrow();
+    drawhexagonal();
+    context.restore()
     requestAnimationFrame(update);
 }
 
 function drawArrow() {
     context.save();
-    context.translate(center.x, center.y);
+    //context.translate(center.x, center.y);
     context.rotate((arrowrot + Math.PI/2)*1);
     context.drawImage(arrowimg, -arrow.width / 2, -arrow.height / 2 -100, arrow.width, arrow.height);
     //context.translate(Math.cos(arrowrot)*100, Math.sin(arrowrot)*100)
+    context.restore();
+}
+
+function drawhexagonal() {
+    context.save()
+    //context.translate(center.x, center.y)
+    context.drawImage(formehexagonale.img, -formehexagonale.width /2, -formehexagonale.height/2, formehexagonale.width, formehexagonale.height);
     context.restore();
 }
