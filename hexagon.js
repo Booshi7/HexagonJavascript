@@ -65,9 +65,6 @@ window.onload = function() {
 
     fpsCounter = document.getElementById("fpsCounter");
 
-    drawbg()
-    drawhexagonal();
-    drawArrow();
     requestAnimationFrame(update);
 }
 
@@ -106,7 +103,6 @@ function drawArrow() {
     context.save();
     //context.translate(center.x, center.y);
     context.rotate((arrowrot + Math.PI/2)*1);
-    context.filter = "saturate(4)"
     context.drawImage(arrowimg, -arrow.width / 2, -arrow.height / 2 -100, arrow.width, arrow.height);
     //context.translate(Math.cos(arrowrot)*100, Math.sin(arrowrot)*100)
     context.restore();
@@ -121,5 +117,6 @@ function drawhexagonal() {
 function drawbg() {
     //context.save();
     context.drawImage(bg.img, -bg.width/2, -bg.height/2, bg.width, bg.height);
+
     //context.restore();
 }
