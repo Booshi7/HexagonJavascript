@@ -3,8 +3,8 @@ let boardh = 690;
 let boardw = 690;
 let context;
 
-let arrowh = 500;
-let arroww = 500;
+let arrowh = 50;
+let arroww = 50;
 let arrowrot = -Math.PI / 2;
 let arrowimg;
 
@@ -58,7 +58,6 @@ window.onload = function() {
     context = board.getContext("2d");
 
     arrowimg = document.getElementById("trianglerotated");
-    arrowimg.style.filter = "grayscale(100%)"
     formehexagonale.img = document.getElementById("hexagonal")
 
     bg.img = document.getElementById("bg");
