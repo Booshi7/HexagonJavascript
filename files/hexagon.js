@@ -8,6 +8,11 @@ let arroww = 50;
 let arrowrot = -Math.PI / 2;
 let arrowimg;
 let modulatedArrowImg;
+let modulatedBgImg;
+let modulatedhexagone;
+let colorwheel = 0;
+let maxcolor = 3
+let colorcd = maxcolor -1;
 
 let arrow = {
     width: arroww,
@@ -61,6 +66,7 @@ window.onload = function() {
 
     arrowimg = document.getElementById("trianglerotated");
     arrow.baseImage.src = arrowimg.src;
+    
     formehexagonale.img = document.getElementById("hexagonal")
 
     bg.img = document.getElementById("bg");
@@ -88,16 +94,26 @@ function update(timestamp) {
     //Contrôles
     if (keys['q']) {
         arrowrot -= rotationspeed;
-        modulatedArrowImg = modulate(arrow.baseImage, '#FF0000');
+        //modulatedArrowImg = modulate(arrow.baseImage, '#FF0000');
     }
     else if (keys['d']) {
         arrowrot += rotationspeed;
-        modulatedArrowImg = modulate(arrow.baseImage, '#012ef8');
+        //modulatedArrowImg = modulate(arrow.baseImage, '#012ef8');
     }
     else if (keys['z']) {
-        modulatedArrowImg = modulate(arrow.baseImage, '#ffffff');
+        //modulatedArrowImg = modulate(arrow.baseImage, '#ffffff');
     }
-
+    colorcd += 1
+    if (colorcd == maxcolor){
+        colorcd = 0
+        colorwheel += 0.01
+        colorwheel = Math.floor(colorwheel*1000)/1000
+        if (colorwheel > 1){colorwheel = 0}
+        let rgbvalue =  hslToRgb(colorwheel, 1, 0.5)
+        //console.log(colorwheel,rgbToHex(rgbvalue[0], rgbvalue[1],rgbvalue[2]))
+        modulatedBgImg = modulate(bg.img, rgbToHex(rgbvalue[0], rgbvalue[1],rgbvalue[2]))
+        modulatedhexagone = modulate(formehexagonale.img, rgbToHex(rgbvalue[0], rgbvalue[1],rgbvalue[2]))
+    }
     // Draw + global rotation
     globalrotation += 0.00;
     context.save()
@@ -119,14 +135,15 @@ function drawArrow() {
 }
 
 function drawhexagonal() {
-    context.drawImage(formehexagonale.img, -formehexagonale.width / 2, -formehexagonale.height / 2, formehexagonale.width, formehexagonale.height);
+    context.drawImage(modulatedhexagone, -formehexagonale.width / 2, -formehexagonale.height / 2, formehexagonale.width, formehexagonale.height);
 }
 
 function drawbg() {
-    context.drawImage(bg.img, -bg.width / 2, -bg.height / 2, bg.width, bg.height);
+    context.drawImage(modulatedBgImg, -bg.width / 2, -bg.height / 2, bg.width, bg.height);
 }
 
 function modulate(image, color) {
+    
     // Crée un canvas temporaire pour dessiner l'image (sans je sais pas pouquoi j'ai un problème de taille d'image)d
     const tempCanvas = document.createElement('canvas');
     const tempContext = tempCanvas.getContext('2d');
@@ -162,3 +179,33 @@ function modulate(image, color) {
 
     return modulatedImage;
 }
+
+function hslToRgb(h, s, l){
+    var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        var hue2rgb = function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function rgbToHex(red, green, blue) {
+    const rgb = (red << 16) | (green << 8) | (blue << 0);
+    return '#' + (0x1000000 + rgb).toString(16).slice(1);
+  }
