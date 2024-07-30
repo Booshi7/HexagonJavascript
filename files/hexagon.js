@@ -74,7 +74,7 @@ class hexamur {
         this.patern = patern;
         this.size = 1200;
         this.img = new Image();
-        this.img.src = "hex1.png";
+        this.img.src = "hex2.png";
         this.rotation = this.patern * Math.PI/3;
 
     }
