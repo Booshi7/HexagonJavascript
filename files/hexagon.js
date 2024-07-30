@@ -3,8 +3,8 @@ let boardh = 690;
 let boardw = 690;
 let context;
 
-let arrowh = 50;
-let arroww = 50;
+let arrowh = 20;
+let arroww = 20;
 let arrowrot = -Math.PI / 2;
 let arrowimg;
 let modulatedArrowImg;
@@ -49,9 +49,9 @@ let fps = 0;
 let fpsCounter;
 
 let spawncd = 0
-let spawntime = 10
+let spawntime = 40
 let obstaclelist = []
-let obstaclespeed = 40
+let obstaclespeed = 15
 
 //Touches
 window.addEventListener('keydown', function(e) {
@@ -132,14 +132,32 @@ function update(timestamp) {
     }
     else if (keys['z']) {
         //modulatedArrowImg = modulate(arrow.baseImage, '#ffffff');
-        console.log(spawncd)
+        //console.log(spawncd)
     }
 
     if (spawncd % spawntime == 0) {
-        obstaclelist.push(new hexamur(randomIntFromInterval(0, 6)))
+        obstaclelist.push(new hexamur(randomIntFromInterval(0, 5)))
     }
-    if (spawncd >= Math.floor(1050/obstaclespeed)) {
+    if (spawncd >= Math.floor(((1050/obstaclespeed)/10)*8)) {
+        let variablequisertarien = Math.floor((spawntime/20) * 19)
+        if ((spawncd-Math.floor(1050/obstaclespeed)) % spawntime < 0) {variablequisertarien = -Math.floor(spawntime/10)}
+        //console.log((spawncd-Math.floor(1050/obstaclespeed)) % spawntime, variablequisertarien)
+        if ((spawncd-Math.floor(1050/obstaclespeed)) % spawntime == variablequisertarien) {
+            //console.log(51545)
+            let checkpos = Math.floor(((arrowrot+Math.PI/2)/ (Math.PI/3)) % 6)
+            if (checkpos <0) {checkpos += 6}
+            //console.log(     checkpos,           Math.floor(obstaclelist[0].rotation))
+            if (checkpos != Math.floor(obstaclelist[0].rotation)){
+                gameover = true
+            }
+        }
         if ((spawncd-Math.floor(1050/obstaclespeed)) % spawntime == 0) {
+            //let checkpos = Math.floor(((arrowrot+Math.PI/2)/ (Math.PI/3)) % 6)
+            //if (checkpos <0) {checkpos += 6}
+            //console.log(     checkpos,           Math.floor(obstaclelist[0].rotation))
+            //if (checkpos != Math.floor(obstaclelist[0].rotation)){
+            //    gameover = true
+            //}
             obstaclelist.splice(0, 1)
         }
 
@@ -149,7 +167,7 @@ function update(timestamp) {
     colorcd += 1
     if (colorcd == maxcolor){
         colorcd = 0
-        colorwheel += 0.01
+        colorwheel += 0.00
         colorwheel = Math.floor(colorwheel*1000)/1000
         if (colorwheel > 1){colorwheel = 0}
         let rgbvalue =  hslToRgb(colorwheel, 1, 0.5)
@@ -170,13 +188,14 @@ function update(timestamp) {
     context.restore();
     //penis.drawing()
 
+    if (gameover == true) {alert("c'est fini !!!!")}
     requestAnimationFrame(update);
 }
 
 function drawArrow() {
     context.save();
     context.rotate((arrowrot + Math.PI / 2) * 1);
-    context.drawImage(modulatedArrowImg, -arrow.width / 2, -arrow.height / 2 - 100, arrow.width, arrow.height);
+    context.drawImage(modulatedArrowImg, -arrow.width / 2, -arrow.height / 2 - 85, arrow.width, arrow.height);
     context.restore();
 }
 
