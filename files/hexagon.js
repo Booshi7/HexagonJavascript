@@ -48,6 +48,11 @@ let lastFrameTime = 0;
 let fps = 0;
 let fpsCounter;
 
+let spawncd = 0
+let spawntime = 10
+let obstaclelist = []
+let obstaclespeed = 40
+
 //Touches
 window.addEventListener('keydown', function(e) {
     keys[e.key] = true;
@@ -56,6 +61,32 @@ window.addEventListener('keydown', function(e) {
 window.addEventListener('keyup', function(e) {
     keys[e.key] = false;
 });
+
+
+
+class hexamur {
+    constructor(patern) {
+        this.patern = patern;
+        this.size = 1200;
+        this.img = new Image();
+        this.img.src = "hex1.png";
+        this.rotation = this.patern * Math.PI/3;
+
+    }
+
+    drawing() {
+        this.size -= obstaclespeed
+        context.save();
+        context.rotate(this.rotation);
+        context.drawImage(this.img, -this.size / 2, -this.size / 2, this.size, this.size);
+        context.restore();
+    }
+
+    resize() {
+        this.size -= 8
+    }
+}
+
 
 //fonction de départ (je crois)
 window.onload = function() {
@@ -70,7 +101,7 @@ window.onload = function() {
     formehexagonale.img = document.getElementById("hexagonal")
 
     bg.img = document.getElementById("bg");
-
+    //penis = new hexamur(5)
 
     fpsCounter = document.getElementById("fpsCounter");
 
@@ -89,8 +120,7 @@ function update(timestamp) {
     }
     lastFrameTime = timestamp;
 
-    context.clearRect(0, 0, board.width, board.height);
-
+    
     //Contrôles
     if (keys['q']) {
         arrowrot -= rotationspeed;
@@ -102,7 +132,20 @@ function update(timestamp) {
     }
     else if (keys['z']) {
         //modulatedArrowImg = modulate(arrow.baseImage, '#ffffff');
+        console.log(spawncd)
     }
+
+    if (spawncd % spawntime == 0) {
+        obstaclelist.push(new hexamur(randomIntFromInterval(0, 6)))
+    }
+    if (spawncd >= Math.floor(1050/obstaclespeed)) {
+        if ((spawncd-Math.floor(1050/obstaclespeed)) % spawntime == 0) {
+            obstaclelist.splice(0, 1)
+        }
+
+    }
+    spawncd += 1
+
     colorcd += 1
     if (colorcd == maxcolor){
         colorcd = 0
@@ -116,13 +159,16 @@ function update(timestamp) {
     }
     // Draw + global rotation
     globalrotation += 0.00;
+    context.clearRect(0, 0, board.width, board.height);
     context.save()
     context.translate(center.x, center.y)
     context.rotate(globalrotation)
     drawbg();
     drawArrow();
     drawhexagonal();
+    obstaclelist.forEach(function (item, index) { item.drawing() });
     context.restore();
+    //penis.drawing()
 
     requestAnimationFrame(update);
 }
@@ -209,3 +255,7 @@ function rgbToHex(red, green, blue) {
     const rgb = (red << 16) | (green << 8) | (blue << 0);
     return '#' + (0x1000000 + rgb).toString(16).slice(1);
   }
+
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
