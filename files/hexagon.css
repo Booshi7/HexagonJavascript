@@ -23,8 +23,17 @@ h1 {
 #fpsCounter {
     position: absolute;
     
-    top: 10px;
+    top: 20px;
     right: 10px;
     font-size: 20px;
+    color: rgb(255, 0, 0);
+}
+
+#Score {
+    position: absolute;
+    
+    top: 20px;
+    left: 10px;
+    font-size: 50px;
     color: rgb(255, 0, 0);
 }

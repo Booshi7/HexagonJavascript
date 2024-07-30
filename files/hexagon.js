@@ -38,7 +38,9 @@ let center = {
 }
 
 let gameover = false;
+let gameoverscreen
 let score = 0;
+let scorecounter = 0
 let rotationspeed = 0.1;
 let globalrotation = 0;
 let keys = {};
@@ -51,11 +53,14 @@ let fpsCounter;
 let spawncd = 0
 let spawntime = 40
 let obstaclelist = []
-let obstaclespeed = 15
+let obstaclespeed = 15  
+
+let musique
 
 //Touches
 window.addEventListener('keydown', function(e) {
     keys[e.key] = true;
+    //console.log(e.key)
 });
 
 window.addEventListener('keyup', function(e) {
@@ -75,7 +80,7 @@ class hexamur {
     }
 
     drawing() {
-        this.size -= obstaclespeed
+        //this.size -= obstaclespeed
         context.save();
         context.rotate(this.rotation);
         context.drawImage(this.img, -this.size / 2, -this.size / 2, this.size, this.size);
@@ -83,7 +88,7 @@ class hexamur {
     }
 
     resize() {
-        this.size -= 8
+        this.size -= obstaclespeed
     }
 }
 
@@ -103,7 +108,14 @@ window.onload = function() {
     bg.img = document.getElementById("bg");
     //penis = new hexamur(5)
 
+    gameoverscreen = new Image()
+    gameoverscreen.src = "HEXAMORT.png"
+
     fpsCounter = document.getElementById("fpsCounter");
+    scorecounter = document.getElementById("Score");
+
+    musique = new Audio("584398.mp3")
+    
 
     modulatedArrowImg = arrow.baseImage; // Initialisation avec l'image de base
 
@@ -112,6 +124,7 @@ window.onload = function() {
 
 //Boucle (je crois)
 function update(timestamp) {
+    
     // truc de fps
     if (lastFrameTime) {
         const deltaTime = timestamp - lastFrameTime;
@@ -119,9 +132,12 @@ function update(timestamp) {
         fpsCounter.textContent = "FPS: " + fps;
     }
     lastFrameTime = timestamp;
+    scorecounter.textContent = "Score: " + score
 
     
     //Contrôles
+    if (gameover == false) {
+        musique.play()
     if (keys['q']) {
         arrowrot -= rotationspeed;
         //modulatedArrowImg = modulate(arrow.baseImage, '#FF0000');
@@ -150,6 +166,7 @@ function update(timestamp) {
             if (checkpos != Math.floor(obstaclelist[0].rotation)){
                 gameover = true
             }
+            else {score += 1}
         }
         if ((spawncd-Math.floor(1050/obstaclespeed)) % spawntime == 0) {
             //let checkpos = Math.floor(((arrowrot+Math.PI/2)/ (Math.PI/3)) % 6)
@@ -175,8 +192,10 @@ function update(timestamp) {
         modulatedBgImg = modulate(bg.img, rgbToHex(rgbvalue[0], rgbvalue[1],rgbvalue[2]))
         modulatedhexagone = modulate(formehexagonale.img, rgbToHex(rgbvalue[0], rgbvalue[1],rgbvalue[2]))
     }
+    obstaclelist.forEach(function (item, index) { item.resize() });
+    globalrotation += 0.01;
+    }
     // Draw + global rotation
-    globalrotation += 0.00;
     context.clearRect(0, 0, board.width, board.height);
     context.save()
     context.translate(center.x, center.y)
@@ -188,7 +207,13 @@ function update(timestamp) {
     context.restore();
     //penis.drawing()
 
-    if (gameover == true) {alert("c'est fini !!!!")}
+    if (gameover == true) {
+        musique.pause()
+        context.drawImage(gameoverscreen, 0, 0, boardh, boardw)
+        if (keys[' ']) {
+            restart()
+        }
+    }
     requestAnimationFrame(update);
 }
 
@@ -277,4 +302,17 @@ function rgbToHex(red, green, blue) {
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function restart(){
+    colorwheel = 0;
+    maxcolor = 3
+    colorcd = maxcolor -1;
+    score = 0
+    gameover = false
+    globalrotation = 0;
+    obstaclelist = []
+    spawncd = 0
+    arrowrot = -Math.PI / 2
+    musique.currentTime = 0
 }
