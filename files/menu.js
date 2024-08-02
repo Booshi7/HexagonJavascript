@@ -56,9 +56,10 @@ function generateKeybindOptions() {
         input.setAttribute('id', `keybind-input`);
         input.setAttribute('value', keybind[key]);
 
-        // Ajout d'un écouteur d'événement pour mettre à jour keybind
-        input.addEventListener('input', function(e) {
-            keybind[key] = e.target.value;
+        input.addEventListener('keydown', function(e) {
+            keybind[key] = e.key.toUpperCase();
+            input.value = keybind[key];
+            e.preventDefault();
         });
 
         div.appendChild(label);
