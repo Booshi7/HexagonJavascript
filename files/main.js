@@ -15,6 +15,7 @@ window.onload = function() {
 
     formehexagonale.img = document.getElementById("hexagonal");
     bg.img = document.getElementById("bg");
+
     gameoverscreen.src = "HEXAMORT.png";
 
     // Compteur FPS et Score
@@ -25,13 +26,14 @@ window.onload = function() {
     musique = new Audio("584398.mp3");
 
     // Pré-calculer les images
-    preCalculateImages().then(() => {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('board').style.display = 'none';
-        document.getElementById('options').style.display = 'none';
-        document.getElementById('Score').style.display = 'block';
-        document.getElementById('fpsCounter').style.display = 'block';
-        document.getElementById('menu').style.display = 'block';
-        initGame();
-    });
+    preCalculateImages();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('board').style.display = 'none';
+    document.getElementById('options').style.display = 'none';
+    document.getElementById('Score').style.display = 'block';
+    document.getElementById('fpsCounter').style.display = 'block';
+    document.getElementById('menu').style.display = 'block';
+
+    initGame();
 };

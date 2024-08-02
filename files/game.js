@@ -26,7 +26,7 @@ let keybind = {
 let arrow = {
     width: arroww,
     height: arrowh,
-    baseImage: createImage("trianglerotated.png")
+    baseImage: createImage("trianglerotated.png"),
 }
 
 let formehexagonale = {
@@ -88,31 +88,15 @@ window.addEventListener('keyup', function(e) {
 });
 
 function preCalculateImages() {
-    return new Promise((resolve) => {
-        const numColors = 60;
-        let loaded = 0;
+    const numColors = 60;
+    for (let i = 0; i < numColors; i++) {
+        const hue = i / numColors;
+        const [r, g, b] = hslToRgb(hue, 1, 0.5);
+        const color = rgbToHex(r, g, b);
 
-        function checkCompletion() {
-            loaded++;
-            if (loaded === numColors * 2) {
-                resolve();
-            }
-        }
-
-        for (let i = 0; i < numColors; i++) {
-            const hue = i / numColors;
-            const [r, g, b] = hslToRgb(hue, 1, 0.5);
-            const color = rgbToHex(r, g, b);
-
-            const modulatedBgImage = modulate(bg.img, color);
-            modulatedBgImage.onload = checkCompletion;
-            modulatedBgImages.push(modulatedBgImage);
-
-            const modulatedHexImage = modulate(formehexagonale.img, color);
-            modulatedHexImage.onload = checkCompletion;
-            modulatedHexImages.push(modulatedHexImage);
-        }
-    });
+        modulatedBgImages.push(modulate(bg.img, color));
+        modulatedHexImages.push(modulate(formehexagonale.img, color));
+    }
 }
 
 class hexamur {
@@ -287,19 +271,22 @@ function modulate(image, color) {
     const imageData = tempContext.getImageData(0, 0, image.width, image.height);
     const data = imageData.data;
 
-    const rgb = hexToRgb(color);
+    const [r, g, b] = hexToRgb(color);
+
+    // Applique le filtre de couleur
     for (let i = 0; i < data.length; i += 4) {
-        data[i] = rgb.r;
-        data[i + 1] = rgb.g;
-        data[i + 2] = rgb.b;
+        data[i] = (data[i] * r) / 255;     // Red
+        data[i + 1] = (data[i + 1] * g) / 255; // Green
+        data[i + 2] = (data[i + 2] * b) / 255; // Blue
     }
 
     tempContext.putImageData(imageData, 0, 0);
 
     // Crée une nouvelle image à partir du canvas modifié
-    const newImage = new Image();
-    newImage.src = tempCanvas.toDataURL();
-    return newImage;
+    const modulatedImage = new Image();
+    modulatedImage.src = tempCanvas.toDataURL();
+
+    return modulatedImage;
 }
 
 function randomIntFromInterval(min, max) {
@@ -330,10 +317,7 @@ function rgbToHex(r, g, b) {
 
 function hexToRgb(hex) {
     const bigint = parseInt(hex.slice(1), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return { r, g, b };
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
 function hslToRgb(h, s, l) {
