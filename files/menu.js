@@ -15,6 +15,11 @@ document.getElementById('backButton').addEventListener('click', function() {
     showMenu();
 });
 
+document.getElementById("musiqueButton").addEventListener('click', function() {
+    activateMusique();
+});
+
+
 function showMenu() {
     document.getElementById('menu').style.display = 'block';
     document.getElementById('board').style.display = 'none';
@@ -36,6 +41,17 @@ function showGame() {
     document.getElementById('board').style.display = 'block';
     isMenuActive = false;
     isOptionsActive = false;
+}
+
+function activateMusique() {
+    musiqueoption = !musiqueoption
+    if (musiqueoption == true)
+    {
+        document.getElementById('musiqueButton').textContent = "Musique : On"
+    }
+    else {
+        document.getElementById('musiqueButton').textContent = "Musique : Off"
+    }
 }
 
 // Génération dynamique des options de keybind

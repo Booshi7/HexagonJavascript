@@ -14,7 +14,7 @@ let modulatedhexagone;
 let colorwheel = 0;
 let maxcolor = 3;
 let colorcd = maxcolor - 1;
-
+let musiqueoption = true;
 //KeyBind
 let keybind = {
     "left": 'q',
@@ -219,7 +219,7 @@ function drawAll() {
     context.restore();
 
     if (gameover === true) {
-        musique.pause();
+        if (musiqueoption == true) {musique.pause();}
         context.drawImage(gameoverscreen, 0, 0, boardh, boardw);
     }
 }
@@ -239,7 +239,7 @@ function update(timestamp) {
 
     //Contrôles
     if (gameover === false) {
-        musique.play();
+        if (musiqueoption == true) {musique.play();}
         updateControls();
         collision();
         spawning();
@@ -315,7 +315,7 @@ function restart() {
     colorcd = maxcolor - 1;
     obstaclelist = [];
     globalrotation = 0;
-    musique.currentTime = 0
+    if (musiqueoption == true) {musique.currentTime = 0}
 }
 
 function createImage(src) {
