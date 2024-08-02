@@ -71,6 +71,13 @@ h1 {
     display: flex;
 }
 
+#loading img {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
 .spinner {
     border: 16px solid #f3f3f3;
     border-top: 16px solid #3498db;

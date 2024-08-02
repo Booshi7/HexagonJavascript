@@ -57,7 +57,7 @@ function generateKeybindOptions() {
         input.setAttribute('value', keybind[key]);
 
         input.addEventListener('keydown', function(e) {
-            keybind[key] = e.key.toUpperCase();
+            keybind[key] = e.key
             input.value = keybind[key];
             e.preventDefault();
         });
