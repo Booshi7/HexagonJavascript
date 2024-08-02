@@ -14,6 +14,9 @@ let colorwheel = 0;
 let maxcolor = 3
 let colorcd = maxcolor -1;
 
+//Variable de navigation
+let isMenuActive = true;
+let isOptionsActive = false;
 
 //KeyBind
 keybind = {
@@ -70,7 +73,11 @@ let fpsCounter;
 let spawncd = 0
 let spawntime = 40
 let obstaclelist = []
-let obstaclespeed = 15  
+let obstaclespeed = 15
+
+//Stocker les image avec les couleurs modifiées
+let modulatedBgImages = [];
+let modulatedHexImages = [];
 
 let musique
 
@@ -83,20 +90,65 @@ window.addEventListener('keyup', function(e) {
     keys[e.key] = false;
 });
 
+document.getElementById('playButton').addEventListener('click', function() {
+    showGame();
+});
 
-let modulatedBgImages = [];
-let modulatedHexImages = [];
+document.getElementById('optionsButton').addEventListener('click', function() {
+    showOptions();
+});
+
+document.getElementById('backButton').addEventListener('click', function() {
+    showMenu();
+});
+
+function showMenu() {
+    document.getElementById('menu').style.display = 'block';
+    document.getElementById('board').style.display = 'none';
+    isMenuActive = true;
+    isOptionsActive = false;
+}
+
+function showOptions() {
+    document.getElementById('options').style.display = 'block';
+    document.getElementById('menu').style.display = 'none';
+    isMenuActive = false;
+    isOptionsActive = true;
+}
+
+function showGame() {
+    document.getElementById('menu').style.display = 'none';
+    document.getElementById('board').style.display = 'block';
+    isMenuActive = false;
+    isOptionsActive = false;
+}
 
 function preCalculateImages() {
-    const numColors = 60; // Nombre réduit de couleurs
-    for (let i = 0; i < numColors; i++) {
-        const hue = i / numColors;
-        const [r, g, b] = hslToRgb(hue, 1, 0.5);
-        const color = rgbToHex(r, g, b);
+    return new Promise((resolve) => {
+        const numColors = 60; // Nombre réduit de couleurs
+        let loaded = 0;
 
-        modulatedBgImages.push(modulate(bg.img, color));
-        modulatedHexImages.push(modulate(formehexagonale.img, color));
-    }
+        function checkCompletion() {
+            loaded++;
+            if (loaded === numColors * 2) { // 2 images par couleur
+                resolve(); // Toutes les images sont pré-calculées
+            }
+        }
+
+        for (let i = 0; i < numColors; i++) {
+            const hue = i / numColors;
+            const [r, g, b] = hslToRgb(hue, 1, 0.5);
+            const color = rgbToHex(r, g, b);
+
+            const modulatedBgImage = modulate(bg.img, color);
+            modulatedBgImage.onload = checkCompletion;
+            modulatedBgImages.push(modulatedBgImage);
+
+            const modulatedHexImage = modulate(formehexagonale.img, color);
+            modulatedHexImage.onload = checkCompletion;
+            modulatedHexImages.push(modulatedHexImage);
+        }
+    });
 }
 
 class hexamur {
@@ -123,35 +175,49 @@ class hexamur {
 
 //Creation of our application
 window.onload = function() {
-    //Creation du plateau de jeu
+    // Afficher l'écran de chargement
+    document.getElementById('loading').style.display = 'flex';
+
+    // Configuration du plateau de jeu
     board = document.getElementById("board");
     board.height = boardh;
     board.width = boardw;
     context = board.getContext("2d");
 
-    //Creation du personnage
+    // Configuration du personnage
     arrowimg = document.getElementById("trianglerotated");
     arrow.baseImage.src = arrowimg.src;
 
     formehexagonale.img = document.getElementById("hexagonal");
-
     bg.img = document.getElementById("bg");
+    gameoverscreen.src = "HEXAMORT.png";
 
-    gameoverscreen = Object.assign(new Image(), { src: "HEXAMORT.png" });
-
-    //FPS counter
+    // Compteur FPS et Score
     fpsCounter = document.getElementById("fpsCounter");
     scorecounter = document.getElementById("Score");
 
-    //Music
-    musique = new Audio("584398.mp3")
+    // Musique
+    musique = new Audio("584398.mp3");
 
+    // Pré-calculer les images
+    preCalculateImages().then(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('board').style.display = 'block';
+        document.getElementById('Score').style.display = 'block';
+        document.getElementById('fpsCounter').style.display = 'block';
+        document.getElementById('menu').style.display = 'block';
+        initGame();
+    });
+};
+
+function initGame() {
     // Initialisation avec l'image de base
     modulatedArrowImg = arrow.baseImage;
-    preCalculateImages();
 
+    // Lancer la boucle de mise à jour du jeu
     requestAnimationFrame(update);
 }
+
 
 function calculateFPS(timestamp) {
     if (lastFrameTime) {
@@ -165,10 +231,10 @@ function calculateFPS(timestamp) {
 
 function updateControls() {
 
-        if (keys['q']) {
+        if (keys[keybind.left]) {
             arrowrot -= rotationspeed;
         }
-        else if (keys['d']) {
+        else if (keys[keybind.rigth]) {
             arrowrot += rotationspeed;
         }
 }
@@ -243,10 +309,14 @@ function update(timestamp) {
 
     calculateFPS(timestamp);
 
+    if (isMenuActive || isOptionsActive) {
+        requestAnimationFrame(update);
+        return;
+    }
 
     //Contrôles
-    if (true) {
-        // musique.play();
+    if (gameover === false) {
+        musique.play();
         updateControls();
         collision();
         spawning();
@@ -277,7 +347,7 @@ function drawbg() {
 }
 
 function modulate(image, color) {
-    
+
     // Crée un canvas temporaire pour dessiner l'image (sans je sais pas pouquoi j'ai un problème de taille d'image)
     const tempCanvas = document.createElement('canvas');
     const tempContext = tempCanvas.getContext('2d');
@@ -343,7 +413,7 @@ function hexToRgb(hex) {
     return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
-function randomIntFromInterval(min, max) { // min and max included 
+function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 

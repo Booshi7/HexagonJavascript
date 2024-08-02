@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="hexagon.css">
 </head>
 <body>
+    <!-- Loading -->
+    <div id="loading">
+        <p>Loading...</p>
+    </div>
+
     <h1>Hexagon Game</h1>
     <canvas id="board"></canvas>
     <div id="fpsCounter">FPS: 0</div>
@@ -14,6 +19,16 @@
     <img id="trianglerotated" src="triangle.png" crossOrigin="anonymous" style="display: none;"/>
     <img id="hexagonal" src="formehexagonale.png" crossOrigin="anonymous" style="display: none;" />
     <img id="bg" src="bg.png" crossOrigin="anonymous" style ="display: none;" />
-    <script src="hexagon.js"></script>
+
+    <!-- Menu -->
+    <div id="menu">
+        <button id="playButton">Play</button>
+        <button id="optionsButton">Options</button>
+        <div id="options" style="display: none;">
+            <button id="backButton">Back</button>
+        </div>
+    </div>
+
+<script src="hexagon.js"></script>
 </body>
 </html>
