@@ -55,7 +55,7 @@ h1 {
 }
 
 #options {
-    margin-top: 20px;
+    margin-top: 100px;
 }
 
 
@@ -87,4 +87,49 @@ h1 {
 
 #board, #fpsCounter, #Score, #menu {
     display: none;
+}
+
+#keybind-options {
+    margin: 20px;
+}
+
+
+#keybind-options > div {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+}
+
+
+#keybind-options label {
+    margin-right: 10px;
+    font-weight: bold;
+    width: 80px;
+}
+
+#keybind-options input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px;
+}
+
+/* CSS */
+#backButton {
+    background-color: #fff;
+    border: 1px solid #d5d9d9;
+    border-radius: 8px;
+    box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+    box-sizing: border-box;
+    color: #0f1111;
+    font-family: "Amazon Ember",sans-serif;
+    font-size: 13px;
+    line-height: 29px;
+    padding: 0 10px 0 11px;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    width: 100px;
 }
