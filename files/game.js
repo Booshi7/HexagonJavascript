@@ -314,6 +314,8 @@ function restart() {
     colorwheel = 0;
     colorcd = maxcolor - 1;
     obstaclelist = [];
+    globalrotation = 0;
+    musique.currentTime = 0
 }
 
 function createImage(src) {
