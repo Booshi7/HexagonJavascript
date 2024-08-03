@@ -19,6 +19,10 @@ document.getElementById("musiqueButton").addEventListener('click', function() {
     activateMusique();
 });
 
+document.getElementById("vitesseButton").addEventListener('click', function() {
+    activateVitesse();
+});
+
 
 function showMenu() {
     document.getElementById('menu').style.display = 'block';
@@ -51,6 +55,18 @@ function activateMusique() {
     }
     else {
         document.getElementById('musiqueButton').textContent = "Musique : Off"
+    }
+}
+
+function activateVitesse() {
+    if (rotationspeed == 0.10)
+    {
+        rotationspeed = 0.15;
+        document.getElementById('vitesseButton').textContent = "Fast Arrow"
+    }
+    else {
+        rotationspeed = 0.10;
+        document.getElementById('vitesseButton').textContent = "Slow Arrow"
     }
 }
 
