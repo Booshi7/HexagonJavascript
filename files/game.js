@@ -59,7 +59,7 @@ let score = 0;
 let scorecounter = 0;
 
 //Rotation Variable
-let rotationspeed = 0.15;
+let rotationspeed = 0.1;
 let globalrotation = 0;
 
 //Input system
@@ -168,7 +168,7 @@ function collision() {
 
 
     let distanceToCenter = obstacleSize / 2;
-    const proximityFromCenter = 95;
+    const proximityFromCenter = 100;
 
     if (distanceToCenter <= proximityFromCenter) {
         let arrowAngle = (arrowrot + Math.PI / 2) % (2 * Math.PI);
@@ -244,7 +244,7 @@ function update(timestamp) {
         const normalizedDeltaTime = deltaTime / baseFrameTime;
 
         const baseObstacleSpeed = 15;
-        const baseSpawnTime = 15;
+        const baseSpawnTime = 40;
 
         obstaclespeed = baseObstacleSpeed * normalizedDeltaTime;
         spawntime = baseSpawnTime / normalizedDeltaTime;
