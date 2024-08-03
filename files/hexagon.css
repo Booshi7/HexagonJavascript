@@ -38,13 +38,34 @@ h1 {
     color: rgb(255, 0, 0);
 }
 
-#menu {
-    position: absolute;
+#menu, #options {
+    /*position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 10;
+    z-index: 10;*/
+    border: 3px solid #FFFFFF;
+    border-radius: 50px;
+    width:690px;
+    height:690px;
+    margin:0 auto;
+    flex-wrap: wrap;
+    background-image:url("bgmenu.png") ;
+    background-size: 690px 690px;
+}
+
+#logo, #logo2 {
+    width: 348px;
+    height: 156px;
+    image-rendering: pixelated;
+    position: absolute;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#videdemenu {
+    height:280px;
 }
 
 #menu button {
@@ -52,10 +73,15 @@ h1 {
     margin: 10px auto;
     padding: 10px 20px;
     font-size: 18px;
+    border-radius: 8px;
 }
 
-#options {
-    margin-top: 100px;
+/*#options {
+
+}*/
+
+#videdoption {
+    height:180px;
 }
 
 
@@ -98,6 +124,7 @@ h1 {
 
 #keybind-options {
     margin: 20px;
+    color:#FFFFFF;
 }
 
 
@@ -109,11 +136,16 @@ h1 {
     text-align: left;
 }
 
+#options > h2 {
+    color:#FFFFFF;
+}
+
 
 #keybind-options label {
     margin-right: 10px;
     font-weight: bold;
     width: 80px;
+    
 }
 
 #keybind-options input[type="text"] {
@@ -124,24 +156,7 @@ h1 {
 }
 
 /* CSS */
-#backButton {
-    background-color: #fff;
-    border: 1px solid #d5d9d9;
-    border-radius: 8px;
-    box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
-    box-sizing: border-box;
-    color: #0f1111;
-    font-family: "Amazon Ember",sans-serif;
-    font-size: 13px;
-    line-height: 29px;
-    padding: 0 10px 0 11px;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: middle;
-    width: 100px;
-}
-
-#musiqueButton {
+#backButton, #musiqueButton {
     background-color: #fff;
     border: 1px solid #d5d9d9;
     border-radius: 8px;
@@ -156,4 +171,9 @@ h1 {
     text-decoration: none;
     vertical-align: middle;
     width: 150px;
+}
+
+#backButton {
+    width: 100px;
+    margin-top: 10px;
 }

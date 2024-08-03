@@ -213,6 +213,8 @@ function update(timestamp) {
     calculateFPS(timestamp);
 
     if (keys[keybind.menu]){
+        musique.pause();
+        restart();
         showMenu();
     }
 
