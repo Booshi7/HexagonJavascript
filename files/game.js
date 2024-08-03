@@ -59,7 +59,7 @@ let score = 0;
 let scorecounter = 0;
 
 //Rotation Variable
-let rotationspeed = 0.1;
+let rotationspeed = 0.15;
 let globalrotation = 0;
 
 //Input system
@@ -141,12 +141,13 @@ function calculateFPS(timestamp) {
     scorecounter.textContent = "Score: " + score;
 }
 
-function updateControls() {
+function updateControls(deltaTime) {
+    let updateRotationSpeed = rotationspeed * deltaTime;
     if (keys[keybind.left]) {
-        arrowrot -= rotationspeed;
+        arrowrot -= updateRotationSpeed;
     }
     else if (keys[keybind.right]) {
-        arrowrot += rotationspeed;
+        arrowrot += updateRotationSpeed;
     }
 }
 
@@ -167,9 +168,9 @@ function collision() {
 
 
     let distanceToCenter = obstacleSize / 2;
-    const proximityThreshold = 95;
+    const proximityFromCenter = 95;
 
-    if (distanceToCenter <= proximityThreshold) {
+    if (distanceToCenter <= proximityFromCenter) {
         let arrowAngle = (arrowrot + Math.PI / 2) % (2 * Math.PI);
         if (arrowAngle < 0) arrowAngle += 2 * Math.PI;
         let newArrowAngle = Math.floor(arrowAngle / (Math.PI / 3)) % 6;
@@ -239,25 +240,22 @@ function update(timestamp) {
 
     //Contrôles
     if (gameover === false) {
-        // Update game elements with normalized delta time
         const baseFrameTime = 1 / 60;
         const normalizedDeltaTime = deltaTime / baseFrameTime;
 
-        // Define base speed and spawn time
         const baseObstacleSpeed = 15;
-        const baseSpawnTime = 40;
+        const baseSpawnTime = 15;
 
-        // Update obstacle speed and spawn time based on normalized delta time
         obstaclespeed = baseObstacleSpeed * normalizedDeltaTime;
         spawntime = baseSpawnTime / normalizedDeltaTime;
 
         if (musiqueoption == true) {musique.play();}
-        updateControls();
+        updateControls(normalizedDeltaTime);
         collision();
         spawning(normalizedDeltaTime);
         updateColors();
         obstaclelist.forEach(function (item) { item.resize(); });
-        globalrotation += 0.01;
+        globalrotation += 0.01*normalizedDeltaTime;
         drawAll();
     }
     else{
