@@ -15,6 +15,10 @@ let colorwheel = 0;
 let maxcolor = 3;
 let colorcd = maxcolor - 1;
 let musiqueoption = true;
+
+//Calcule Delta obstacle
+let lastTime = 0;
+
 //KeyBind
 let keybind = {
     "left": 'q',
@@ -68,9 +72,9 @@ let fpsCounter;
 
 // Obstacle
 let spawncd = 0;
-let spawntime = 40;
 let obstaclelist = [];
 let obstaclespeed = 15;
+let spawntime = 40;
 
 //Stocker les image avec les couleurs modifiées
 let modulatedBgImages = [];
@@ -146,37 +150,41 @@ function updateControls() {
     }
 }
 
-function spawning() {
-    if (spawncd % spawntime === 0) {
+function spawning(deltaTime) {
+    if (spawncd >= spawntime) {
         obstaclelist.push(new hexamur(randomIntFromInterval(0, 5)));
+        spawncd = 0;
     }
-    spawncd += 1;
+    spawncd += 1*deltaTime;
 }
 
 function collision() {
-    if (spawncd >= Math.floor(((1050/obstaclespeed)/10)*8)) {
-        let obstacle = spawncd - Math.floor(1050 / obstaclespeed);
-        let offset = Math.floor((spawntime/20) * 19);
-        let checkPoint = obstacle % spawntime;
+    if (obstaclelist.length === 0) return;
 
-        if (checkPoint === offset || checkPoint === -Math.floor(spawntime / 10)) {
-            let checkpos = Math.floor((arrowrot + Math.PI / 2) / (Math.PI / 3)) % 6;
-            if (checkpos < 0) {
-                checkpos += 6;
-            }
+    let currentObstacle = obstaclelist[0];
+    let obstacleSize = currentObstacle.size;
+    let obstacleAngle = currentObstacle.rotation;
 
-            if (checkpos !== Math.floor(obstaclelist[0].rotation)) {
-                gameover = true;
-            } else {
-                score += 1;
-            }
-        }
 
-        if (checkPoint === 0) {
+    let distanceToCenter = obstacleSize / 2;
+    const proximityThreshold = 95;
+
+    if (distanceToCenter <= proximityThreshold) {
+        let arrowAngle = (arrowrot + Math.PI / 2) % (2 * Math.PI);
+        if (arrowAngle < 0) arrowAngle += 2 * Math.PI;
+        let newArrowAngle = Math.floor(arrowAngle / (Math.PI / 3)) % 6;
+
+        const angleTolerance = 0.5;
+
+        if (Math.abs(newArrowAngle - obstacleAngle) <= angleTolerance) {
+            score += 1;
             obstaclelist.shift();
+        } else {
+            gameover = true;
         }
     }
 }
+
 
 function updateColors() {
     colorcd += 1;
@@ -210,6 +218,12 @@ function drawAll() {
 
 //Boucle principale de gameplay
 function update(timestamp) {
+    if (lastTime === 0) {
+        lastTime = timestamp;
+    }
+    const deltaTime = (timestamp - lastTime) / 1000; // en secondes
+    lastTime = timestamp;
+
     calculateFPS(timestamp);
 
     if (keys[keybind.menu]){
@@ -225,10 +239,22 @@ function update(timestamp) {
 
     //Contrôles
     if (gameover === false) {
+        // Update game elements with normalized delta time
+        const baseFrameTime = 1 / 60;
+        const normalizedDeltaTime = deltaTime / baseFrameTime;
+
+        // Define base speed and spawn time
+        const baseObstacleSpeed = 15;
+        const baseSpawnTime = 40;
+
+        // Update obstacle speed and spawn time based on normalized delta time
+        obstaclespeed = baseObstacleSpeed * normalizedDeltaTime;
+        spawntime = baseSpawnTime / normalizedDeltaTime;
+
         if (musiqueoption == true) {musique.play();}
         updateControls();
         collision();
-        spawning();
+        spawning(normalizedDeltaTime);
         updateColors();
         obstaclelist.forEach(function (item) { item.resize(); });
         globalrotation += 0.01;
