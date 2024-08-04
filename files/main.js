@@ -16,14 +16,14 @@ window.onload = function() {
     formehexagonale.img = document.getElementById("hexagonal");
     bg.img = document.getElementById("bg");
 
-    gameoverscreen.src = "HEXAMORT.png";
+    gameoverscreen.src = "image/HEXAMORT.png";
 
     // Compteur FPS et Score
     fpsCounter = document.getElementById("fpsCounter");
     scorecounter = document.getElementById("Score");
 
     // Musique
-    musique = new Audio("584398.mp3");
+    musique = new Audio("music/584398.mp3");
 
     // Pré-calculer les images
     preCalculateImages();
