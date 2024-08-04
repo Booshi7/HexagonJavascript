@@ -222,7 +222,7 @@ function update(timestamp) {
     if (lastTime === 0) {
         lastTime = timestamp;
     }
-    const deltaTime = (timestamp - lastTime) / 1000; // en secondes
+    const deltaTime = (timestamp - lastTime) / 1000;
     lastTime = timestamp;
 
     calculateFPS(timestamp);
@@ -244,10 +244,11 @@ function update(timestamp) {
         const normalizedDeltaTime = deltaTime / baseFrameTime;
 
         const baseObstacleSpeed = 15;
-        const baseSpawnTime = 40;
 
         obstaclespeed = baseObstacleSpeed * normalizedDeltaTime;
-        spawntime = baseSpawnTime / normalizedDeltaTime;
+
+        console.log("obstaclespeed: ", obstaclespeed);
+        console.log("spawntime: ", spawntime);
 
         if (musiqueoption == true) {musique.play();}
         updateControls(normalizedDeltaTime);
