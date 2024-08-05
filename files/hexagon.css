@@ -57,7 +57,7 @@ h1 {
     height:690px;
     margin:0 auto;
     flex-wrap: wrap;
-    background-image:url("bgmenu.png") ;
+    background-image:url("image/bgmenu.png") ;
     background-size: 690px 690px;
 }
 
