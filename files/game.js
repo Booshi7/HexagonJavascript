@@ -30,19 +30,19 @@ let keybind = {
 let arrow = {
     width: arroww,
     height: arrowh,
-    baseImage: createImage("trianglerotated.png"),
+    baseImage: createImage("image/trianglerotated.png"),
 }
 
 let formehexagonale = {
     width: 150,
     height: 150,
-    img: createImage("hexagonal.png"),
+    img: createImage("image/hexagonal.png"),
 }
 
 let bg = {
     width: 1000,
     height: 1000,
-    img: createImage("bg.png"),
+    img: createImage("image/bg.png"),
 }
 
 let center = {
@@ -52,7 +52,7 @@ let center = {
 
 //Endgame screen variable
 let gameover = false;
-let gameoverscreen = createImage("HEXAMORT.png");
+let gameoverscreen = createImage("image/HEXAMORT.png");
 
 //Score Variable
 let score = 0;
@@ -107,7 +107,7 @@ class hexamur {
     constructor(patern, size = 1200) {
         this.patern = patern;
         this.size = size;
-        this.img = createImage("hex2.png");
+        this.img = createImage("image/hex2.png");
         this.rotation = this.patern * Math.PI/3;
     }
 
@@ -246,9 +246,6 @@ function update(timestamp) {
         const baseObstacleSpeed = 15;
 
         obstaclespeed = baseObstacleSpeed * normalizedDeltaTime;
-
-        console.log("obstaclespeed: ", obstaclespeed);
-        console.log("spawntime: ", spawntime);
 
         if (musiqueoption == true) {musique.play();}
         updateControls(normalizedDeltaTime);
